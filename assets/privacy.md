@@ -1,0 +1,1 @@
+# Política de Privacidade\n\nEste é um exemplo de política. Leia com atenção.

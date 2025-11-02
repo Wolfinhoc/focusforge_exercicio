@@ -1,0 +1,17 @@
+name: focusforge
+description: FocusForge - Pomodoro with onboarding and consent example
+publish_to: 'none'
+version: 1.0.0
+environment:
+  sdk: '>=2.18.0 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  shared_preferences: ^2.0.15
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/privacy.md
+    - assets/terms.md

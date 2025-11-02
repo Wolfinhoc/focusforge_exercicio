@@ -1,0 +1,1 @@
+# Termos de Uso\n\nEstes são termos de uso de exemplo.
