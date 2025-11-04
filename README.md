@@ -1,51 +1,47 @@
 # focusforge
 Aluno: Bruno Rocco Wolfardt
 
-PRD — FocusForge: Primeira Execução, Consentimento e Identidade 
-Versão: v1.0 
-Responsável: Bruno Rocco Wolfardt 
-1) Visão Geral 
-Resumo: FocusForge é um app de gestão de foco baseado em ciclos Pomodoro com 
-metas de 
-sessão. 
-Na primeira execução, guia o usuário pelo onboarding, apresentação do ciclo padrão 
-(25/5), leitura das políticas e opt-in de notificações. 
-Problemas que ataca: - Desorientação na primeira execução - Falta de persistência de consentimentos - Sobrecarga de decisões antes do usuário entender o fluxo 
-Resultado desejado: experiência inicial curta, guiada e memorável; consentimentos 
-persistidos e editáveis; usuário pronto para iniciar o primeiro ciclo. 
-2) Persona Principal 
-Estudante com rotina dividida que precisa de sessões focadas e previsíveis. 
-3) Identidade Visual 
-Paleta: - Violet #7C3AED (Primária) - Slate #0F172A (Texto/Superfície escuro) - Cyan #06B6D4 (Acento) 
-Direção: minimalista, alto contraste, useMaterial3: true 
-Ícone: timer minimalista (prompt: 'timer minimal flat vector, circular, transparent 
-background, violet/cyan accents, 1024x1024') 
-4) Jornada de Primeira Execução 
-Fluxo base: 
-Splash -> Onboarding (PageView 3 telas: Bem-vindo, Como funciona, 
-Consentimento) -> Visualizador de Políticas (Markdown) -> Opt-in Notificações -> Home 
-(Primeiro ciclo e meta textual) 
-Detalhes: - Ciclo padrão ensinado: 25 min foco / 5 min pausa - Primeiro passo: criar uma meta curta (texto) - Após consentimento, solicitar opt-in de notificações com explicação breve 
-5) Requisitos Funcionais (RF) - RF-1: PageView de onboarding com Dots sincronizados; Dots ocultos na última página.- 
-RF-2: Navegação contextual: Pular direciona ao consentimento; Voltar/Avançar onde 
-aplicável. - RF-3: Visualizador de políticas em Markdown com barra de progresso e 'Marcar como lido' 
-só após scroll completo. 
-- RF-4: Aceite opt-in (checkbox) habilitado somente após leitura dos dois documentos. - RF-5: Splash decide rota por flags de versão de políticas aceitas. - RF-6: Opt-in de notificações solicitado após aceite, com persistência da escolha. - RF-7: Revogação de consentimento disponível em Configurações com confirmação e 
-SnackBar de desfazer. - RF-8: Persistência das chaves: privacy_read_v1, terms_read_v1, 
-policies_version_accepted, accepted_at (ISO8601), onboarding_completed, 
-notifications_opt_in 
-6) Requisitos Não Funcionais (RNF) - A11Y: alvos >=48dp, foco visível, Semantics, contraste AA, text scaling >=1.3 - Privacidade (LGPD): registro de aceite, facilidade de revogação, políticas como assets- 
-Arquitetura: UI -> Service -> Storage (PrefsService). UI não acessa SharedPreferences 
-diretamente. - Performance: animações ~300ms, evitar rebuilds desnecessários. 
-7) Dados & Persistência (chaves) - privacy_read_v1 : bool - terms_read_v1 : bool - policies_version_accepted : string (ex: v1) - accepted_at : string (ISO8601) - onboarding_completed : bool - notifications_opt_in : bool 
-8) Roteamento 
-/ -> Splash 
-/onboarding -> PageView 
-/policy-viewer -> viewer markdown 
-/home -> Home 
-9) Critérios de Aceite - Onboarding conclui com Dots e navegação correta. - Visualizador de políticas exige leitura completa para habilitar 'Marcar como lido'. - Aceite só habilita após leitura dupla e checkbox marcado. - Splash leva a Home se policies_version_accepted existir e for atual. - Opt-in de notificações persiste e pode ser revogado em Configurações. 
-10) Protocolo de QA (testes manuais mínimos) - Fluxo completo: abrir app -> onboarding -> políticas -> aceite -> opt-in notificações -> 
-home. - Reabrir app com accepted_at presente vai direto à home. - Revogação: confirma e permite desfazer (SnackBar). 
-11) Riscos & Decisões- Risco: acoplamento UI -Storage. Mitigação: PrefsService e injeção de dependência. - Decisão: políticas mantidas como assets para versionamento offline. 
-12) Entregáveis - Implementação Flutter do fluxo de primeira execução + PrefsService. - Evidências (prints) dos estados de onboarding/consentimento/revogação. - Ícone gerado (comando/resultado). 
-Checklist de conformidade: - [ ] Dots sincronizados e ocultos na última tela - [ ] Pular -> consentimento; Voltar/Avançar contextuais - [ ] Viewer com progresso + 'Marcar como lido' - [ ] Aceite habilita somente após leitura dupla + checkbox - [ ] Splash decide rota por versão aceita - [ ] Revogação com confirmação + Desfazer - [ ] Sem SharedPreferences direto na UI (usar PrefsService) - [ ] Opt-in de notificações implementado - [ ] A11Y (48dp, contraste, Semantics, text scaling)
+## PRD — FocusForge: Primeira Execução, Consentimento e Identidade
+**Versão**: v1.0
+
+### 1) Visão Geral
+**Resumo**: FocusForge é um app de gestão de foco baseado em ciclos Pomodoro com metas de sessão. Na primeira execução, guia o usuário pelo onboarding, apresentação do ciclo padrão (25/5), leitura das políticas e opt-in de notificações.
+**Problemas que ataca**: Desorientação na primeira execução, falta de persistência de consentimentos, sobrecarga de decisões antes do usuário entender o fluxo.
+**Resultado desejado**: Experiência inicial curta, guiada e memorável; consentimentos persistidos e editáveis; usuário pronto para iniciar o primeiro ciclo.
+
+---
+
+## PRD — FocusForge: Persistência Local + CRUD com Repository
+**Versão**: v2.0
+
+### 1) Visão Geral
+**Resumo**: Esta fase introduz a persistência local para os ciclos de foco do usuário, permitindo que os dados sejam salvos no dispositivo. A funcionalidade é construída sobre o Padrão Repository para garantir uma arquitetura limpa e escalável, com uma experiência de usuário offline-first.
+
+**Problemas que ataca**:
+- Perda de dados do usuário ao fechar o aplicativo.
+- Falta de uma camada de abstração de dados, acoplando a UI à implementação de armazenamento.
+- Experiência de usuário lenta ou dependente de conexão de rede.
+
+**Resultado desejado**:
+- CRUD completo (Criar, Ler, Atualizar, Deletar) para a entidade `Cycle`.
+- Dados persistidos localmente usando `SharedPreferences`.
+- UI responsiva que carrega dados instantaneamente do cache local (UI Otimista).
+- Base para sincronização incremental com um backend.
+
+### 2) Requisitos Funcionais (RF)
+- **RF-9**: Implementar o CRUD completo para a entidade `Cycle` através da interface `CycleRepository`.
+- **RF-10**: A UI deve refletir as alterações do CRUD instantaneamente (UI Otimista), atualizando o estado local antes da conclusão da operação de persistência.
+- **RF-11**: Implementar um mecanismo de sincronização incremental (`syncIncremental`) que compara o `updatedAt` dos registros para mesclar dados de uma fonte remota com o cache local.
+- **RF-12**: Ao abrir o aplicativo, os dados devem ser carregados do cache local imediatamente, enquanto uma sincronização em segundo plano é disparada para buscar atualizações.
+
+### 3) Arquitetura e Padrões
+- **Repository Pattern**: A lógica de acesso aos dados é abstraída pela interface `CycleRepository`. A `SharedPreferencesCycleRepository` é a implementação concreta para persistência local.
+- **Entity/DTO/Mapper**:
+    - `Cycle`: Entidade de domínio com tipagem forte e regras de negócio.
+    - `CycleDTO`: Objeto de Transferência de Dados para serialização/desserialização.
+    - `CycleMapper`: Converte os dados entre `Entity` e `DTO`.
+- **Offline-First**: A aplicação prioriza o carregamento de dados do cache local para uma experiência de usuário rápida e funcional, mesmo sem conexão de rede.
+
+### 4) Dados & Persistência (chaves)
+- **focus_cycles_v1**: `string` (JSON contendo a lista de todos os ciclos do usuário).
+- **last_sync**: `string` (Data no formato ISO8601 da última sincronização bem-sucedida).
