@@ -8,10 +8,33 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  shared_preferences: ^2.0.15
+  shared_preferences: ^2.2.2
+  image_picker: ^1.0.7
+  image: ^4.1.7
+  path_provider: ^2.1.2
+  path: ^1.8.3
+  flutter_ringtone_player: ^4.0.0+1
+  uuid: ^4.4.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  mocktail: ^1.0.3
+  flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.3.10
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/relogio.png"
+
+flutter_native_splash:
+  color: "#7C3AED" # Cor primária do seu PRD
+  image: assets/relogio.png
 
 flutter:
   uses-material-design: true
   assets:
     - assets/privacy.md
     - assets/terms.md
+    - assets/relogio.png

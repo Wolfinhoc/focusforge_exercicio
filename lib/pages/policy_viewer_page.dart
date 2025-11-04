@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import '../services/prefs_service.dart';
+import '../widgets/app_drawer.dart';
 
 class PolicyViewerPage extends StatefulWidget {
   @override
@@ -68,6 +69,7 @@ class _PolicyViewerPageState extends State<PolicyViewerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: AppDrawer(),
       appBar: AppBar(title: Text('Políticas')),
       body: ListView(
         padding: EdgeInsets.all(16),
